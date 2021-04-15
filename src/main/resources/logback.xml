@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">    <!--  debug="true"  informacja o konfiguracji logbacka-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{​​HH:mm:ss.SSS}​​ [%thread] %-5level %logger{​​36}​​ - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--jeden plik bez pakowania-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logi.log</file>
+        <append>true</append> <!-- jesli false to nadpisze-->
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>%d{​​HH:mm:ss.SSS}​​  %-5level %logger{​​35}​​ - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--    logi do kilku plików bez pakowania-->
+    <appender name="FILE2" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logiBezZip.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{​​yyyy-MM-dd_HH:mm:ss.SSS}​​ [%thread] %-5level %logger{​​36}​​ - %msg%n</Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>logiBezZip%i.log</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>10</MaxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>1KB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--    logi do kilku plików z zipowaniem-->
+    <appender name="FILEZIP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{​​yyyy-MM-dd_HH:mm:ss.SSS}​​ [%thread] %-5level %logger{​​36}​​ - %msg%n</Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>logiFinance%i.zip</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>10</MaxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>1KB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <logger name="impl" level="debug">
+        <appender-ref ref="FILE2"/>
+    </logger>
+
+    <logger name="finances" level="info" additivity="false">
+        <!--        additivity="false" nie dołączy logów na ekran - czyli do root-->
+        <appender-ref ref="FILEZIP"/>
+    </logger>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
